@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borang Kaca (Animasi)</title>
+    <!-- Muatnaik Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tetapan fon Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Latar belakang adalah langit (gradient) */
+            background: linear-gradient(to bottom, #f6d365 0%, #fda085 100%);
+            /* WAJIB: Sembunyikan semua yang terkeluar dari skrin */
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- KESAN 'GLASSMORPHISM' (Sama macam tadi) --- */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            /* PENTING: letak di atas animasi */
+            position: relative;
+            z-index: 10;
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.5); outline: none;
+        }
+        .glass-input::placeholder { color: #4B5563; }
+
+
+        /* --- LATAR BELAKANG ANIMASI --- */
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Di belakang borang */
+        }
+
+        /* Tanah */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 25vh; /* 25% dari ketinggian skrin */
+            background: #AD8B73; /* Coklat tanah */
+        }
+
+        /* Pokok (Dibina dengan CSS) */
+        .tree {
+            position: absolute;
+            bottom: 15vh; /* Duduk atas tanah */
+        }
+        .tree .trunk {
+            width: 25px;
+            height: 100px;
+            background: #8D6E63; /* Coklat batang */
+            border-radius: 5px 5px 0 0;
+        }
+        .tree .leaves {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: #D9534F; /* Merah/Oren musim luruh */
+            border-radius: 50%;
+            left: -37.5px; /* Tengahkan daun */
+        }
+
+        /* --- ANIMASI BASIKAL --- */
+        .cyclist {
+            position: absolute;
+            bottom: 22vh; /* Atas tanah */
+            left: 0;
+            width: 120px;
+            z-index: 5; /* Depan pokok */
+            
+            /* Ini dia animasinya! */
+            /* 'ride-and-turn' ialah nama animasi
+              15s ialah tempoh (15 saat)
+              'ease-in-out' ialah cara pergerakan (perlahan-laju-perlahan)
+              'infinite' ialah ulangan (tanpa henti)
+            */
+            animation: ride-and-turn 15s ease-in-out infinite;
+        }
+
+        /* @keyframes mentakrifkan animasi 'ride-and-turn'
+          Ia bergerak dari kiri ke kanan, kemudian pusing, dan patah balik
+        */
+        @keyframes ride-and-turn {
+            0% {
+                /* Mula di luar skrin kiri */
+                transform: translateX(-100px) scaleX(1); 
+            }
+            45% {
+                /* Bergerak ke luar skrin kanan */
+                transform: translateX(calc(100vw - 20px)) scaleX(1);
+            }
+            50% {
+                /* Pusing (transform: scaleX(-1)) */
+                transform: translateX(calc(100vw - 20px)) scaleX(-1);
+            }
+            95% {
+                /* Bergerak ke luar skrin kiri (terbalik) */
+                transform: translateX(-100px) scaleX(-1);
+            }
+            100% {
+                /* Pusing balik ke asal */
+                transform: translateX(-100px) scaleX(1);
+            }
+        }
+        
+        /* Animasi untuk pokok (Parallax) */
+        /* Pokok akan bergerak perlahan, bertentangan dengan basikal */
+        .tree {
+            animation: drift-trees 25s linear infinite alternate;
+        }
+
+        @keyframes drift-trees {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+
+    <!-- 1. Latar Belakang Animasi -->
+    <div class="scene">
+        <div class="ground"></div>
+        
+        <!-- Pokok 1 (Jauh) -->
+        <div class="tree" style="left: 10%; transform: scale(0.8); z-index: 2; opacity: 0.7;">
+            <div class="leaves" style="background: #E67E22;"></div>
+            <div class="trunk"></div>
+        </div>
+        
+        <!-- Pokok 2 (Dekat) -->
+        <div class="tree" style="left: 70%; transform: scale(1.1); z-index: 4;">
+            <div class="leaves" style="background: #E74C3C;"></div>
+            <div class="trunk"></div>
+        </div>
+
+        <!-- Basikal (SVG Inline) -->
+        <div class="cyclist">
+            <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg">
+                <!-- Orang -->
+                <rect x="55" y="0" width="20" height="20" rx="4" fill="#3498DB"/> <!-- Topi/Helmet Biru -->
+                <rect x="50" y="20" width="30" height="40" rx="5" fill="#C0392B"/> <!-- Baju Merah -->
+                <rect x="45"y="60" width="40" height="10" fill="#2C3E50"/> <!-- Seluar Biru Gelap -->
+                <!-- Basikal -->
+                <circle cx="30" cy="90" r="18" stroke="#34495E" stroke-width="4" fill="none"/> <!-- Tayar Belakang -->
+                <circle cx="100" cy="90" r="18" stroke="#34495E" stroke-width="4" fill="none"/> <!-- Tayar Depan -->
+                <!-- Rangka Basikal -->
+                <polygon points="30,90 60,40 100,90" stroke="#576574" stroke-width="5" fill="none"/>
+                <line x1="60" y1="40" x2="60" y2="70" stroke="#576574" stroke-width="5"/> <!-- Tiang tempat duduk -->
+                <line x1="60" y1="40" x2="90" y2="35" stroke="#576574" stroke-width="5"/> <!-- Handle -->
+            </svg>
+        </div>
+        
+        <!-- Pokok 3 (Paling Depan) -->
+        <div class="tree" style="left: -5%; bottom: 10vh; z-index: 11; transform: scale(1.2);">
+            <div class="leaves" style="background: #F39C12;"></div>
+            <div class="trunk"></div>
+        </div>
+    </div>
+
+    <!-- 2. Kontena Kaca (di hadapan) -->
+    <div class="glass-container w-11/12 max-w-sm p-8">
+        
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Sign In</h2>
+        <form action="#">
+            <div class="relative mb-4">
+                <input type="text" placeholder="Username" class="glass-input w-full py-3 px-4 text-gray-700 font-medium">
+            </div>
+            <div class="relative mb-6">
+                <input type="password" placeholder="Password" class="glass-input w-full py-3 px-4 text-gray-700 font-medium">
+            </div>
+            <button type="submit" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-red-700 transition-colors duration-300">
+                Login
+            </button>
+            <div class="flex justify-between text-xs text-gray-700 mt-4">
+                <a href="#" class="hover:underline">Forgot Password?</a>
+                <a href="#" class="hover:underline">Sign up</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
+
