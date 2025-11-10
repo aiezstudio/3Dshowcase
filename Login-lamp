@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borang Login Lampu</title>
+    <!-- Muatnaik Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tetapan fon Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Latar belakang gelap seperti dalam gambar */
+            background-color: #1a1a1a;
+        }
+
+        /* --- Bahagian Lampu --- */
+        
+        #loginLamp {
+            position: relative;
+            /* Saiz lampu boleh diubah di sini */
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            /* Transisi untuk kesan glow */
+            transition: filter 0.5s ease-in-out;
+        }
+
+        .shade {
+            width: 160px;
+            height: 90px;
+            background-color: #2f2f2f;
+            /* Warna lampu asal (malap) */
+            border: 3px solid #3a3a3a;
+            /* Bentuk tudung lampu */
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Transisi untuk bayang/cahaya */
+            transition: all 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        /* Muka pada lampu */
+        .face {
+            display: flex;
+            gap: 20px;
+            position: relative;
+            top: 10px;
+        }
+
+        .eye {
+            width: 12px;
+            height: 12px;
+            background: #1a1a1a;
+            border-radius: 50%;
+        }
+
+        /* Mulut (senyum) */
+        .smile {
+            width: 40px;
+            height: 20px;
+            border: 3px solid #1a1a1a;
+            border-color: transparent transparent #1a1a1a transparent;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            /* Sembunyikan senyuman dahulu */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .stand {
+            width: 12px;
+            height: 90px;
+            background-color: #d1d1d1;
+        }
+
+        .base {
+            width: 80px;
+            height: 20px;
+            background-color: #d1d1d1;
+            border-radius: 10px 10px 5px 5px;
+        }
+
+        /* --- Logik Keadaan Aktif (Selepas Diklik) --- */
+
+        /* Apabila .active, tunjukkan cahaya */
+        #app.active .shade {
+            background-color: #a3ffa3; /* Warna hijau cerah */
+            border-color: #39ff14;
+            /* Kesan cahaya neon */
+            box-shadow: 0 0 15px #39ff14, 
+                        0 0 30px #39ff14, 
+                        0 0 60px #39ff14,
+                        0 5px 20px rgba(57, 255, 20, 0.4);
+        }
+
+        /* Tunjukkan senyuman */
+        #app.active .smile {
+            opacity: 1;
+        }
+
+        /* Sembunyikan borang secara lalai */
+        #loginForm {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            pointer-events: none; /* Tak boleh diklik bila tersembunyi */
+        }
+
+        /* Tunjukkan borang apabila .active */
+        #app.active #loginForm {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto; /* Boleh diklik */
+        }
+        
+    </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-4">
+
+    <!-- Kontena utama aplikasi -->
+    <div id="app" class="flex flex-col items-center gap-8">
+
+        <!-- Lampu yang Boleh Diklik -->
+        <div id="loginLamp" title="Klik saya!">
+            <!-- Tudung Lampu -->
+            <div class="shade">
+                <!-- Muka Lampu -->
+                <div class="face">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                    <div class="smile"></div>
+                </div>
+            </div>
+            <!-- Tiang & Tapak -->
+            <div class="stand"></div>
+            <div class="base"></div>
+        </div>
+
+        <!-- Borang Log Masuk (Tersembunyi pada mulanya) -->
+        <form id="loginForm" class="w-full max-w-sm p-6 sm:p-8 rounded-2xl border border-green-500/50 bg-black/30 backdrop-blur-md">
+            <h2 class="text-2xl font-bold text-center text-green-300 mb-6">
+                Welcome Back
+            </h2>
+            
+            <!-- Kumpulan Input Username -->
+            <div class="mb-5">
+                <label for="username" class="text-xs text-green-400/70 mb-1 block">Username</label>
+                <input type
+="text" id="username" placeholder="thecodingwizard" class="w-full bg-transparent border-b-2 border-green-500/50 text-white placeholder-gray-500 p-2 focus:outline-none focus:border-green-400 transition">
+            </div>
+
+            <!-- Kumpulan Input Password -->
+            <div class="mb-8">
+                <label for="password" class="text-xs text-green-400/70 mb-1 block">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" class="w-full bg-transparent border-b-2 border-green-500/50 text-white placeholder-gray-500 p-2 focus:outline-none focus:border-green-400 transition">
+            </div>
+
+            <!-- Butang Login -->
+            <button type="submit" class="w-full bg-green-500 text-gray-900 font-bold py-3 rounded-lg hover:bg-green-400 transition duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-400/50">
+                Login
+            </button>
+
+            <!-- Pautan Lupa Kata Laluan -->
+            <div class="text-center mt-6">
+                <a href="#" class="text-sm text-green-400/70 hover:text-green-300 transition">
+                    Forgot Password?
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // --- JavaScript Vanila ---
+
+        // Dapatkan elemen utama
+        const appContainer = document.getElementById('app');
+        const loginLamp = document.getElementById('loginLamp');
+        const loginForm = document.getElementById('loginForm');
+
+        // Fungsi untuk 'toggle' lampu dan borang
+        function toggleLogin() {
+            // 'toggle' kelas 'active' pada kontena utama
+            appContainer.classList.toggle('active');
+        }
+
+        // Tambah 'event listener' pada lampu
+        loginLamp.addEventListener('click', toggleLogin);
+
+        // Halang borang daripada 'submit' dan muat semula laman
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Di sini anda boleh tambah logik pengesahan
+            console.log('Borang telah disubmit!');
+            // Mungkin 'matikan' lampu selepas berjaya login
+            // appContainer.classList.remove('active');
+        });
+
+    </script>
+
+</body>
+</html>
+
